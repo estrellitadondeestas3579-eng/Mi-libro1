@@ -158,12 +158,15 @@ function add(e){
 function tog(){const m=$('#emos');m.style.display=m.style.display=='flex'?'none':'flex';
  if(!m.innerHTML)EM.forEach(x=>{const s=document.createElement('span');s.textContent=x;s.onclick=()=>add({t:'emo',s:x});m.append(s)})}
 
-function files(fs){[...fs].filter(f=>f.type.startsWith('image/')).forEach(f=>{
- const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{
-  const png=/png|gif|webp/.test(f.type),m=png?800:1000,k=Math.min(1,m/Math.max(i.width,i.height));
-  const c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);
-  add({t:'img',s:c.toDataURL(png?'image/png':'image/jpeg',.82)})};i.src=r.result};r.readAsDataURL(f)})}
-$('#img').onchange=e=>{files(e.target.files);e.target.value=''};
+function files(fs){Array.from(fs).forEach(f=>{
+ const u=URL.createObjectURL(f),i=new Image();
+ i.onload=()=>{try{
+  const png=/png|gif|webp|svg/.test(f.type),m=png?800:1000,k=Math.min(1,m/Math.max(i.naturalWidth,i.naturalHeight));
+  const c=document.createElement('canvas');c.width=Math.max(1,i.naturalWidth*k);c.height=Math.max(1,i.naturalHeight*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);
+  add({t:'img',s:c.toDataURL(png?'image/png':'image/jpeg',.82)})}catch(x){toast('No pude agregar esa imagen')}URL.revokeObjectURL(u)};
+ i.onerror=()=>{URL.revokeObjectURL(u);toast('No pude abrir esa imagen. Si es HEIC, pásala a JPG o PNG')};
+ i.src=u})}
+$('#img').onchange=e=>{const l=Array.from(e.target.files);e.target.value='';files(l)};
 addEventListener('paste',e=>files(e.clipboardData.files));
 addEventListener('dragover',e=>e.preventDefault());
 addEventListener('drop',e=>{e.preventDefault();files(e.dataTransfer.files)});
