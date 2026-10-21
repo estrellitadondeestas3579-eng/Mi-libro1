@@ -130,7 +130,11 @@ function lib(d){if(d&&d.v===3&&d.books)return d;return {v:3,bk:0,books:[newBook(
 let LIB=lib((()=>{try{return JSON.parse(localStorage.getItem('libro3')||localStorage.getItem('libro'))}catch(e){}})()),S=LIB.books[LIB.bk=0];
 let sel=null;
 const P=()=>S.cur<0?S.cover:S.pages[S.cur], E=()=>P().el.find(e=>e.id===sel);
-function save(){try{localStorage.setItem('libro3',JSON.stringify(LIB))}catch(e){toast('Memoria del navegador llena: usa Guardar avance')}}
+const IDB=()=>new Promise((ok,no)=>{const r=indexedDB.open('libro-db',1);r.onupgradeneeded=()=>r.result.createObjectStore('k');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)});
+const idbGet=()=>IDB().then(d=>new Promise((ok,no)=>{const q=d.transaction('k').objectStore('k').get('libro3');q.onsuccess=()=>ok(q.result);q.onerror=()=>no(q.error)}));
+const idbSet=v=>IDB().then(d=>new Promise((ok,no)=>{const t=d.transaction('k','readwrite');t.objectStore('k').put(v,'libro3');t.oncomplete=ok;t.onerror=()=>no(t.error);t.onabort=()=>no(t.error)}));
+function save(){clearTimeout(save.t);save.t=setTimeout(()=>idbSet(LIB).then(()=>{try{localStorage.removeItem('libro3');localStorage.removeItem('libro')}catch(e){}}).catch(()=>toast('No se pudo guardar: usa Guardar avance')),150)}
+try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2600)}
 
 function style(d,e){
@@ -325,7 +329,7 @@ function bkDel(){if(!bc)return toast('Abre el libro y ve a la plana que quieres 
   if(!l&&Math.abs(dx)>8){dir=dx<0?1:-1;const j=dir>0?bc:bc-1;if(j<0||j>=bleaf.length){x0=null;return}l=bleaf[j];l.style.transition='none';l.style.zIndex=100}
   if(l){t=(dx<0)==(dir>0)?Math.min(1,Math.abs(dx)/(W*.9)):0;l.style.transform=`rotateY(${dir>0?-180*t:-180+180*t}deg)`;mv0=1}};
  st.onpointerup=st.onpointercancel=()=>{if(x0===null)return;if(l){if(t>.3)bc+=dir;bkApply()}else if(!mv0)bkTap();x0=null;l=null;setTimeout(()=>mv0=0,60)}})();
-render();hm();
+idbGet().then(d=>{if(d&&d.books){LIB=d;S=LIB.books[LIB.bk=Math.min(LIB.bk||0,LIB.books.length-1)]}}).catch(()=>{}).finally(()=>{render();hm()});
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 </body></html>
