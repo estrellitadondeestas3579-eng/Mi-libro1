@@ -19,8 +19,9 @@ button.p{background:var(--a);color:#241a2b;border-color:var(--a);font-weight:600
 .chip.on{background:var(--a);color:#241a2b;border-color:var(--a)}
 input[type=color]{width:38px;height:36px;padding:2px;border-radius:10px;border:1px solid #ffffff22;background:var(--pn);flex:none}
 #stage{flex:1;min-height:0;display:flex;justify-content:center;align-items:center}
-.page{position:relative;aspect-ratio:3/4;container-type:inline-size;overflow:hidden;background:#121212;box-shadow:0 8px 30px #000a;font-family:Georgia,serif}
-#pg{width:min(94vw,calc((100dvh - 215px)*.75));min-width:240px}
+.page{position:relative;aspect-ratio:3/2;container-type:inline-size;overflow:hidden;background:#121212;box-shadow:0 8px 30px #000a;font-family:Georgia,serif}
+#pg{width:min(98vw,calc((100dvh - 215px)*1.5));min-width:260px}
+.page::after{content:'';position:absolute;left:50%;top:0;bottom:0;width:5%;transform:translateX(-50%);background:linear-gradient(90deg,#0000,#00000055 47%,#ffffff2a 50%,#00000055 53%,#0000);pointer-events:none;z-index:50}
 .el{position:absolute;touch-action:none;cursor:move}
 .el.sel{outline:2px solid var(--a);outline-offset:2px}
 .el img{width:100%;display:block;pointer-events:none}
@@ -44,7 +45,9 @@ h1{font:600 17px Georgia,serif;margin:0;flex:none;padding:0 6px}
 @media print{
  body{background:#fff}#app,#toast{display:none!important}
  #all{display:block}
- .pp{width:150mm;height:200mm;box-shadow:none;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .pp .page{position:absolute;top:0;width:300mm;height:200mm;aspect-ratio:auto;box-shadow:none}
+ .pp .page::after{display:none}
+ .pp{width:150mm;height:200mm;position:relative;overflow:hidden;break-after:page;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 .vh{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;pointer-events:none}
 label.b{position:relative}
@@ -53,11 +56,41 @@ label.b{position:relative}
 .cb{background:conic-gradient(#555 25%,#888 0 50%,#555 0 75%,#888 0) 0 0/16px 16px}
 #cv{touch-action:none;display:block;max-width:92vw}
 #toast{z-index:30!important}
+#pg.cv{aspect-ratio:3/4;width:min(80vw,calc((100dvh - 215px)*.75))}
+#pg.cv::after{display:none}
+#pg.cv::before{content:'';position:absolute;left:0;top:0;bottom:0;width:9%;background:linear-gradient(90deg,#1b3282,#2c4cae);z-index:60;pointer-events:none}
+.scr{position:fixed;inset:0;z-index:15;display:none;flex-direction:column;background:linear-gradient(#6a72c6,#2b336d);color:#fff;overflow:hidden}
+.scr .tp{text-align:center;padding:16px 10px 0;position:relative}
+.scr .tp b{font-size:22px;display:block}.scr .tp small{opacity:.75}
+.bk0{position:absolute;left:10px;top:10px;background:#ffffff26;border:0;border-radius:50%;width:40px;height:40px;padding:0;font-size:18px;color:#fff}
+.stg{flex:1;position:relative;touch-action:pan-y;min-height:0}
+#htk{position:absolute;inset:0;perspective:1100px}
+.hc{position:absolute;left:50%;top:50%;width:min(52vw,250px);transition:transform .4s,opacity .4s;cursor:pointer}
+.page.cvr{aspect-ratio:3/4;border-radius:3px 10px 10px 3px;background-color:#e8d9b5;box-shadow:0 10px 24px #0007}
+.cvr::before{content:'';position:absolute;left:0;top:0;bottom:0;width:9%;background:linear-gradient(90deg,#1b3282,#2c4cae);z-index:60}
+.cvr::after{display:none}
+.cvr .el,.face .el{pointer-events:none}
+#bkb{position:absolute;left:50%;top:50%;margin-left:calc(var(--bw)/-2);margin-top:calc(var(--bw)/-3);width:var(--bw);aspect-ratio:3/2;perspective:1800px;transition:transform .55s}
+.leaf{position:absolute;left:50%;top:0;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;transition:transform .55s ease}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;background:#121212;border-radius:0 6px 6px 0}
+.face.bkf{transform:rotateY(180deg);border-radius:6px 0 0 6px}
+.face .page{position:absolute;top:0;height:100%;width:200%;aspect-ratio:auto;box-shadow:none}
+.face .page::after{display:none}
+.face::after{content:'';position:absolute;top:0;bottom:0;left:0;width:14%;pointer-events:none;background:linear-gradient(90deg,#0007,#0000)}
+.face.bkf::after{left:auto;right:0;background:linear-gradient(270deg,#0007,#0000)}
+.face.cvf{overflow:visible;background:none}.face.cvf::after{display:none}
+.face.cvf .page{width:100%;left:0;height:100%}
+.scr .bt{display:flex;justify-content:center;gap:12px;padding:6px 10px 20px;position:relative}
+.rb{width:46px;height:46px;border-radius:50%;background:#fff;color:#222;border:0;font-size:18px;padding:0}
+.mm{display:none;position:absolute;bottom:76px;left:50%;transform:translateX(-50%);background:#fff;border-radius:14px;padding:6px;flex-direction:column;gap:2px;z-index:5}
+.mm button{background:none;border:0;color:#222;text-align:left}
+@media print{.scr{display:none!important}}
 </style></head>
 <body>
 <div id="app">
  <div class="row">
   <h1>Mi libro</h1>
+  <button onclick="bkShow(S.cur<0?0:S.cur+1)">📖 Libro</button><button onclick="hm()">📚 Mis libros</button>
   <button class="p" onclick="saveFile()">Guardar avance</button>
   <label class="b">Abrir<input type="file" id="open" accept=".json" class="vh"></label>
   <button onclick="printAll()">Imprimir / PDF</button>
@@ -76,16 +109,28 @@ label.b{position:relative}
  <div id="stage"><div id="pg" class="page"></div></div>
  <div class="row" id="sel"></div>
 </div>
+<div id="hm" class="scr"><div class="tp"><b id="ht"></b><small id="hn"></small></div><div class="stg" id="hs"><div id="htk"></div></div>
+<div class="bt"><div class="mm" id="mh"><button onclick="hmRen()">✏️ Cambiar nombre</button><button onclick="hmCover()">🎨 Editar portada</button><button onclick="$('#open').click()">📂 Abrir libro guardado</button><button onclick="S=LIB.books[hmSel];printAll()">🖨 Imprimir / PDF</button></div>
+<button class="rb" onclick="mm('mh')">⋯</button><button class="rb" onclick="saveFile()">⬆</button><button class="rb" onclick="hmDel()">🗑</button><button class="rb" onclick="hmNew()">+</button></div></div>
+<div id="bk" class="scr"><div class="tp"><button class="bk0" onclick="hm()">←</button><b id="bkt"></b><small id="bn"></small></div><div class="stg" id="bks"><div id="bkb"></div></div>
+<div class="bt"><div class="mm" id="mb"><button onclick="bkTap()">✏️ Editar esta plana</button><button onclick="S.cur=-1;sel=null;show('');render()">🎨 Editar portada</button><button onclick="printAll()">🖨 Imprimir / PDF</button></div>
+<button class="rb" onclick="mm('mb')">⋯</button><button class="rb" onclick="saveFile()">⬆</button><button class="rb" onclick="bkDel()">🗑</button><button class="rb" onclick="bkAdd()">+</button></div></div>
 <div id="md"></div><div id="all"></div><div id="toast"></div>
 <script>
 const $=s=>document.querySelector(s);
 const BG=[['Hoja negra','#121212'],['Negra con puntos','radial-gradient(#ffffff30 1px,#0000 1.5px) 0 0/4cqw 4cqw #121212'],['Negra cuadriculada','linear-gradient(#ffffff16 1px,#0000 1px) 0 0/5cqw 5cqw,linear-gradient(90deg,#ffffff16 1px,#0000 1px) 0 0/5cqw 5cqw,#121212'],['Noche azul','linear-gradient(160deg,#1b1f4b,#0c0d1f)'],['Papel crema','#f3ead7'],['Kraft','#c49a6c'],['Rosa','#f4b6c8']];
 const FF=[['Clásica','Georgia,serif'],['Manuscrita',"'Segoe Script','Bradley Hand','Comic Sans MS',cursive"],['Meme','Impact,"Arial Black",sans-serif'],['Limpia','system-ui,sans-serif'],['Máquina',"'Courier New',monospace"]];
 const EM='💜 💖 ✨ 🌙 ⭐ 🎀 🦋 🌸 🍓 🎂 🎁 😂 🥹 😎 🔥 🐱 🐶 🍕 🎮 🎵 📸 💌 👑 🫶'.split(' ');
-let S=(()=>{try{return JSON.parse(localStorage.getItem('libro'))}catch(e){}})()||{cur:0,pages:[{n:'Portada',bg:BG[0][1],el:[]}]};
+function mig(d){if(!d||!d.pages)return {v:2,cur:0,pages:[{n:'Portada',bg:BG[0][1],el:[]}]};if(d.v===2)return d;
+ const cv=(e,o)=>({...e,id:Math.random(),x:e.x/2+o,w:e.w/2,f:e.f?e.f/2:e.f}),out=[];
+ for(let i=0;i<d.pages.length;i+=2){const a=d.pages[i],b=d.pages[i+1];out.push({n:a.n+(b?' / '+b.n:''),bg:a.bg,el:[...a.el.map(e=>cv(e,0)),...(b?b.el.map(e=>cv(e,50)):[])]})}
+ return {v:2,cur:0,pages:out.length?out:[{n:'Portada',bg:BG[0][1],el:[]}]}}
+const newBook=(n,pg)=>({n:n||'Mi libro',cover:{bg:'#e8d9b5',el:[{id:Math.random(),t:'txt',x:16,y:38,w:76,r:0,s:n||'Mi libro',c:'#2b2118',f:9,ff:FF[1][1]}]},cur:0,pages:pg||[{n:'Plana 1',bg:BG[0][1],el:[]}]});
+function lib(d){if(d&&d.v===3&&d.books)return d;return {v:3,bk:0,books:[newBook('Mi libro',mig(d).pages)]}}
+let LIB=lib((()=>{try{return JSON.parse(localStorage.getItem('libro3')||localStorage.getItem('libro'))}catch(e){}})()),S=LIB.books[LIB.bk=0];
 let sel=null;
-const P=()=>S.pages[S.cur], E=()=>P().el.find(e=>e.id===sel);
-function save(){try{localStorage.setItem('libro',JSON.stringify(S))}catch(e){toast('Memoria del navegador llena: usa Guardar avance')}}
+const P=()=>S.cur<0?S.cover:S.pages[S.cur], E=()=>P().el.find(e=>e.id===sel);
+function save(){try{localStorage.setItem('libro3',JSON.stringify(LIB))}catch(e){toast('Memoria del navegador llena: usa Guardar avance')}}
 function toast(m){const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',2600)}
 
 function style(d,e){
@@ -117,43 +162,43 @@ function drag(ev,e,d,rs){
  addEventListener('pointermove',mv);addEventListener('pointerup',up)}
 
 function render(soft){
- const pg=$('#pg');pg.style.background=P().bg;pg.innerHTML='';
+ const pg=$('#pg');pg.classList.toggle('cv',S.cur<0);pg.style.background=P().bg;pg.innerHTML='';
  P().el.forEach(e=>pg.append(mk(e)));
  if(soft!==2){chips();selbar()}
 }
 function chips(){
- const c=$('#chips');c.innerHTML='';
+ const c=$('#chips');c.innerHTML='';{const b=document.createElement('button');b.className='chip'+(S.cur<0?' on':'');b.textContent='Portada';b.onclick=()=>{S.cur=-1;sel=null;save();render()};c.append(b)}
  S.pages.forEach((p,i)=>{const b=document.createElement('button');b.className='chip'+(i==S.cur?' on':'');b.textContent=(i+1)+'. '+p.n;
   b.onclick=()=>{S.cur=i;sel=null;save();render()};
-  b.ondblclick=()=>{const n=prompt('Nombre de la página',p.n);if(n){p.n=n;save();chips()}};c.append(b)});
+  b.ondblclick=()=>{const n=prompt('Nombre de la plana',p.n);if(n){p.n=n;save();chips()}};c.append(b)});
  const mkb=(t,f,cl)=>{const b=document.createElement('button');b.textContent=t;b.onclick=f;if(cl)b.className=cl;c.append(b)};
- mkb('+ Página',()=>{S.pages.splice(S.cur+1,0,{n:'Nueva',bg:BG[0][1],el:[]});S.cur++;sel=null;save();render()},'p');
- mkb('Duplicar',()=>{const p=JSON.parse(JSON.stringify(P()));p.n+=' (copia)';p.el.forEach(e=>e.id=Math.random());S.pages.splice(S.cur+1,0,p);S.cur++;save();render()});
+ mkb('+ Plana',()=>{S.pages.splice(S.cur+1,0,{n:'Nueva',bg:BG[0][1],el:[]});S.cur++;sel=null;save();render()},'p');
+ mkb('Duplicar',()=>{if(S.cur<0)return toast('La portada no se duplica');const p=JSON.parse(JSON.stringify(P()));p.n+=' (copia)';p.el.forEach(e=>e.id=Math.random());S.pages.splice(S.cur+1,0,p);S.cur++;save();render()});
  mkb('◀',()=>mv(-1));mkb('▶',()=>mv(1));
- mkb('Borrar página',()=>{if(!confirm('¿Borrar esta página?'))return;S.pages.splice(S.cur,1);if(!S.pages.length)S.pages.push({n:'Página',bg:BG[0][1],el:[]});S.cur=Math.min(S.cur,S.pages.length-1);sel=null;save();render()});
+ mkb('Borrar plana',()=>{if(S.cur<0)return toast('La portada no se borra');if(!confirm('¿Borrar esta plana?'))return;S.pages.splice(S.cur,1);if(!S.pages.length)S.pages.push({n:'Página',bg:BG[0][1],el:[]});S.cur=Math.min(S.cur,S.pages.length-1);sel=null;save();render()});
  const bg=$('#bgs');if(!bg.options.length)BG.forEach((b,i)=>bg.add(new Option(b[0],i)));
 }
-function mv(d){const j=S.cur+d;if(j<0||j>=S.pages.length)return;[S.pages[S.cur],S.pages[j]]=[S.pages[j],S.pages[S.cur]];S.cur=j;save();render()}
+function mv(d){if(S.cur<0)return;const j=S.cur+d;if(j<0||j>=S.pages.length)return;[S.pages[S.cur],S.pages[j]]=[S.pages[j],S.pages[S.cur]];S.cur=j;save();render()}
 function setBg(i){P().bg=BG[i][1];save();render(2)}
 $('#bgc').oninput=e=>{P().bg=e.target.value;save();render(2)};
 
 function selbar(){
  const s=$('#sel');s.innerHTML='';const e=E();
- if(!e){s.innerHTML='<div id="hint">Toca un elemento para moverlo. Pellizca la esquina morada para cambiar su tamaño. Doble toque en un texto para editarlo. También puedes pegar o arrastrar fotos.</div>';return}
+ if(!e){s.innerHTML='<div id="hint">Cada plana son dos hojas: izquierda y derecha, con el lomo al centro. Toca un elemento para moverlo. Pellizca la esquina morada para cambiar su tamaño. Doble toque en un texto para editarlo. También puedes pegar o arrastrar fotos.</div>';return}
  const b=(t,f)=>{const x=document.createElement('button');x.textContent=t;x.onclick=f;s.append(x)};
  if(e.t=='img'){b('✂️ Recortar',()=>cutTool(e));b('🪄 Quitar fondo',()=>bgTool(e));if(e.o)b('Original',()=>{e.s=e.o;e.o=null;save();render()})}
  b('Duplicar',()=>{const c={...e,id:Math.random(),x:e.x+4,y:e.y+4};P().el.push(c);sel=c.id;save();render()});
  b('Al frente',()=>{const a=P().el;a.push(a.splice(a.indexOf(e),1)[0]);save();render()});
  b('Atrás',()=>{const a=P().el;a.unshift(a.splice(a.indexOf(e),1)[0]);save();render()});
  b('↺',()=>{e.r=(e.r||0)-5;save();render(2);selbar()});b('↻',()=>{e.r=(e.r||0)+5;save();render(2);selbar()});
- if(e.t=='txt'){b('A−',()=>{e.f=Math.max(2,e.f-1);save();render(2)});b('A+',()=>{e.f+=1;save();render(2)});
+ if(e.t=='txt'){b('A−',()=>{e.f=Math.max(1,e.f-.5);save();render(2)});b('A+',()=>{e.f+=.5;save();render(2)});
   const f=document.createElement('select');FF.forEach(x=>f.add(new Option(x[0],x[1])));f.value=e.ff;f.onchange=()=>{e.ff=f.value;save();render(2)};s.append(f)}
  if(e.t=='txt'||e.t=='tkt'||e.t=='env'){const c=document.createElement('input');c.type='color';c.value=e.c;c.oninput=()=>{e.c=c.value;save();const d=$('[data-id="'+e.id+'"]');if(d)style(d,e)};s.append(c)}
  b('🗑 Quitar',()=>{P().el=P().el.filter(x=>x!==e);sel=null;save();render()});
 }
 function add(e){
- const D={txt:{w:55,f:6,c:'#ffffff',ff:FF[1][1],s:'Escribe aquí'},tkt:{w:58,c:'#ffd166',s:'🎟️ Vale por\nun abrazo gigante'},env:{w:50,c:'#d9b88f',s:'Ábreme cuando\nestés triste'},emo:{w:16},img:{w:55}}[e.t];
- Object.assign(e,{...D,...e});e.id=Math.random();e.x=e.x??(15+Math.random()*15);e.y=e.y??(15+Math.random()*20);e.r=0;
+ const D={txt:{w:28,f:3,c:'#ffffff',ff:FF[1][1],s:'Escribe aquí'},tkt:{w:30,c:'#ffd166',s:'🎟️ Vale por\nun abrazo gigante'},env:{w:26,c:'#d9b88f',s:'Ábreme cuando\nestés triste'},emo:{w:8},img:{w:28}}[e.t];
+ Object.assign(e,{...D,...e});if(S.cur<0){e.w*=2;if(e.f)e.f*=2}e.id=Math.random();e.x=e.x??(8+Math.random()*30);e.y=e.y??(15+Math.random()*20);e.r=0;
  P().el.push(e);sel=e.id;save();render()}
 function tog(){const m=$('#emos');m.style.display=m.style.display=='flex'?'none':'flex';
  if(!m.innerHTML)EM.forEach(x=>{const s=document.createElement('span');s.textContent=x;s.onclick=()=>add({t:'emo',s:x});m.append(s)})}
@@ -174,13 +219,14 @@ addEventListener('keydown',e=>{if((e.key=='Delete'||e.key=='Backspace')&&sel&&!d
 $('#stage').onpointerdown=e=>{if(e.target.id=='stage'||e.target.id=='pg'){sel=null;render()}};
 
 function saveFile(){
- const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(LIB)],{type:'application/json'}));
  a.download='mi-libro-'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Avance guardado en tu dispositivo')}
 $('#open').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();
- r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.pages)throw 0;S=d;S.cur=0;sel=null;save();render();toast('Libro abierto')}catch(x){toast('Ese archivo no es un libro válido')}};r.readAsText(f);e.target.value=''};
+ r.onload=()=>{try{const d=JSON.parse(r.result);if(!d.pages&&!d.books)throw 0;LIB=lib(d);LIB.bk=0;S=LIB.books[0];S.cur=0;sel=null;save();hm();toast('Libro abierto')}catch(x){toast('Ese archivo no es un libro válido')}};r.readAsText(f);e.target.value=''};
 function printAll(){
  const w=$('#all');w.innerHTML='';
- S.pages.forEach(p=>{const d=document.createElement('div');d.className='page pp';d.style.background=p.bg;p.el.forEach(e=>d.append(mk(e,1)));w.append(d)});
+ {const o=document.createElement('div');o.className='pp';const d=coverEl(S);d.style.cssText+=';position:absolute;left:0;top:0;width:150mm;height:200mm;aspect-ratio:auto;border-radius:0;box-shadow:none';o.append(d);w.append(o)}
+ S.pages.forEach(p=>[0,1].forEach(h=>{const o=document.createElement('div');o.className='pp';const d=document.createElement('div');d.className='page';d.style.background=p.bg;d.style.left=h?'-150mm':'0';p.el.forEach(e=>d.append(mk(e,1)));o.append(d);w.append(o)}));
  toast('En el diálogo elige "Guardar como PDF"');setTimeout(()=>print(),400)}
 function loadImg(src,cb){const i=new Image();i.onload=()=>cb(i);i.src=src}
 function modal(h){const m=$('#md');m.innerHTML=h;m.style.display='flex'}
@@ -233,7 +279,53 @@ function bgTool(e){loadImg(e.s,img=>{
  $('#tl').oninput=run;$('#gl').onchange=run;run();
  $('#no').onclick=closeM;$('#ok').onclick=()=>commit(e,cv.toDataURL('image/png'));
 })}
-render();
+let hmSel=0,mv0=0,bc=0,bleaf=[];
+function show(id){['hm','bk'].forEach(x=>$('#'+x).style.display=x==id?'flex':'none')}
+function mm(id){const m=$('#'+id);m.style.display=m.style.display=='flex'?'none':'flex'}
+document.querySelectorAll('.mm').forEach(m=>m.addEventListener('click',()=>m.style.display='none'));
+function coverEl(b,full){const c=document.createElement('div');c.className='page cvr';c.style.background=b.cover.bg;b.cover.el.forEach(e=>c.append(mk(e,1)));
+ if(full)c.style.cssText+=';position:absolute;inset:0;width:100%;height:100%;aspect-ratio:auto;border-radius:0 6px 6px 0';return c}
+function swipe(el,step){let x0=null;el.onpointerdown=e=>{x0=e.clientX};
+ el.onpointermove=e=>{if(x0===null)return;const dx=e.clientX-x0;if(Math.abs(dx)>45){step(dx<0?1:-1);x0=e.clientX;mv0=1}};
+ el.onpointerup=el.onpointercancel=()=>{x0=null;setTimeout(()=>mv0=0,60)}}
+/* ---- inicio: varios libros ---- */
+function hm(){hmSel=LIB.bk;show('hm');hmBuild()}
+function hmBuild(){const t=$('#htk');t.innerHTML='';
+ LIB.books.forEach((b,i)=>{const c=coverEl(b);c.classList.add('hc');c.onclick=()=>{if(mv0){mv0=0;return}if(i==hmSel)bkOpen();else{hmSel=i;hmLay()}};t.append(c)});hmLay()}
+function hmLay(){[...$('#htk').children].forEach((c,i)=>{const d=i-hmSel,a=Math.abs(d),sg=Math.sign(d),w=c.offsetWidth;
+ c.style.transform=`translate(-50%,-50%) translateX(${d?sg*(w*.62+(a-1)*w*.2):0}px) translateZ(${-a*40}px) rotateY(${-sg*40}deg) scale(${d?.85:1})`;c.style.zIndex=50-a;c.style.opacity=a>4?0:1});
+ const b=LIB.books[hmSel];LIB.bk=hmSel;$('#ht').textContent=b.n;$('#hn').textContent=b.pages.length+' planas'}
+swipe($('#hs'),d=>{hmSel=Math.max(0,Math.min(LIB.books.length-1,hmSel+d));hmLay()});
+function hmNew(){const n=prompt('Nombre del libro nuevo','Libro '+(LIB.books.length+1));if(!n)return;LIB.books.push(newBook(n));hmSel=LIB.books.length-1;save();hmBuild()}
+function hmDel(){if(LIB.books.length<2)return toast('Necesitas al menos un libro');if(!confirm('¿Borrar este libro completo?'))return;LIB.books.splice(hmSel,1);hmSel=Math.min(hmSel,LIB.books.length-1);save();hmBuild()}
+function hmRen(){const b=LIB.books[hmSel],n=prompt('Nombre del libro',b.n);if(n){b.n=n;save();hmLay()}}
+function hmCover(){S=LIB.books[hmSel];S.cur=-1;sel=null;show('');render()}
+/* ---- libro abierto: hojas que se voltean ---- */
+function bkOpen(){S=LIB.books[hmSel];LIB.bk=hmSel;show('bk');bkBuild(0);setTimeout(()=>bkGo(1),300)}
+function bkShow(c){S=LIB.books[LIB.bk];show('bk');bkBuild(c)}
+function half(p,side){const f=document.createElement('div');f.className='face'+(side?'':' bkf');const g=document.createElement('div');g.className='page';g.style.background=p.bg;g.style.left=side?'-100%':'0';p.el.forEach(e=>g.append(mk(e,1)));f.append(g);return f}
+function bkBuild(c){const n=S.pages.length,b=$('#bkb'),bw=Math.max(240,Math.min(innerWidth*.96,(innerHeight-290)*1.5));
+ b.style.setProperty('--bw',bw+'px');b.innerHTML='';bc=Math.max(0,Math.min(c,n));
+ const base=half(S.pages[n-1],1);base.style.inset='0 0 0 50%';b.append(base);bleaf=[];
+ for(let j=0;j<n;j++){const l=document.createElement('div');l.className='leaf';
+  if(j==0){const f=document.createElement('div');f.className='face cvf';f.append(coverEl(S,1));l.append(f,half(S.pages[0],0))}
+  else l.append(half(S.pages[j-1],1),half(S.pages[j],0));
+  b.append(l);bleaf.push(l)}
+ $('#bkt').textContent=S.n;bkApply()}
+function bkApply(){const n=bleaf.length;
+ bleaf.forEach((l,j)=>{const f=j<bc;l.style.transition='';l.style.transform=`rotateY(${f?-180:0}deg)`;l.style.zIndex=f?j:n-j});
+ $('#bkb').style.transform=bc==0?'translateX(-25%)':'';$('#bn').textContent=bc?'Plana '+bc+' de '+n:n+' planas'}
+function bkGo(c){bc=Math.max(0,Math.min(c,bleaf.length));bkApply()}
+function bkTap(){if(bc==0)return bkGo(1);S.cur=bc-1;sel=null;show('');render()}
+function bkAdd(){const n=S.pages.length,i=bc==0?n:bc;S.pages.splice(i,0,{n:'Plana '+(n+1),bg:BG[0][1],el:[]});save();bkBuild(i+1)}
+function bkDel(){if(!bc)return toast('Abre el libro y ve a la plana que quieres borrar');if(S.pages.length<2)return toast('Tiene que quedar al menos una plana');if(!confirm('¿Borrar esta plana?'))return;S.pages.splice(bc-1,1);save();bkBuild(bc)}
+(()=>{let x0=null,l=null,t=0,dir=0;const st=$('#bks');
+ st.onpointerdown=e=>{x0=e.clientX;l=null;t=0;mv0=0};
+ st.onpointermove=e=>{if(x0===null)return;const dx=e.clientX-x0,W=$('#bkb').offsetWidth/2;
+  if(!l&&Math.abs(dx)>8){dir=dx<0?1:-1;const j=dir>0?bc:bc-1;if(j<0||j>=bleaf.length){x0=null;return}l=bleaf[j];l.style.transition='none';l.style.zIndex=100}
+  if(l){t=(dx<0)==(dir>0)?Math.min(1,Math.abs(dx)/(W*.9)):0;l.style.transform=`rotateY(${dir>0?-180*t:-180+180*t}deg)`;mv0=1}};
+ st.onpointerup=st.onpointercancel=()=>{if(x0===null)return;if(l){if(t>.3)bc+=dir;bkApply()}else if(!mv0)bkTap();x0=null;l=null;setTimeout(()=>mv0=0,60)}})();
+render();hm();
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 </script>
 </body></html>
